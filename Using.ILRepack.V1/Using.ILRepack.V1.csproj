@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="1.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
+  </ItemGroup>
+
+  <!-- ILRepack -->
+  <Target Name="ILRepack" AfterTargets="Build">
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)\CommonLibrary.dll" />
+      <InputAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <DoNotInternalizeAssemblies Include="$(AssemblyName)" />
+    </ItemGroup>
+    <ILRepack Parallel="true" Internalize="true" InternalizeExclude="@(DoNotInternalizeAssemblies)" InputAssemblies="@(InputAssemblies)" TargetKind="Dll" OutputFile="$(OutputPath)\$(AssemblyName).dll" LibraryPath="$(OutputPath)" KeyFile="..\KeyFile.snk" PrimaryAssemblyFile="$(AssemblyName).dll" />
+  </Target>
+  <!-- /ILRepack -->
+
+</Project>

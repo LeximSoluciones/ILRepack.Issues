@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLibrary\CommonLibrary.csproj" />
+  </ItemGroup>
+
+  <Target Name="ILRepack" AfterTargets="Build">
+    <ItemGroup>
+      <InputAssemblies Include="CommonLibrary.dll" />
+      <InputAssemblies Include="$(AssemblyName).dll" />
+    </ItemGroup>
+    <ItemGroup>
+      <DoNotInternalizeAssemblies Include="$(AssemblyName)" />
+    </ItemGroup>
+
+    <ILRepack Verbose="false" DebugInfo="false" Parallel="true" Internalize="true" InternalizeExcludeAssemblies="@(DoNotInternalizeAssemblies)" InputAssemblies="@(InputAssemblies)" OutputType="Dll" OutputAssembly="$(AssemblyName).dll" WorkingDirectory="$(OutputPath)" MainAssembly="$(AssemblyName).dll" AttributeAssembly="$(OutputPath)\$(AssemblyName).dll" KeyFile="..\KeyFile.snk" />
+  </Target>
+
+</Project>
